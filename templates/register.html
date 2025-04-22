@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <!-- Inline styling for the page -->
+    <style>
+        /* Basic page styling for centering and background */
+        body {
+            background-color: #333;  /* Dark grey background */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #f4f4f9;  /* Light text color for contrast */
+        }
+
+        /* Container for the form */
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Form input labels */
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #000; /* Black color for the labels */
+        }
+
+        /* Input fields styling */
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #f9f9f9;  /* Light background for input fields */
+        }
+
+        /* Input focus effect */
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: rgb(38, 104, 217); /* Highlight on focus */
+            outline: none;
+        }
+
+        /* Submit button styling */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: rgb(38, 104, 217);
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgb(69, 140, 160);
+        }
+
+        /* Footer below the form with login link */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #000;  /* Black color for the footer text */
+        }
+
+        .footer a {
+            color: #007BFF; /* Blue color for the links */
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Flash message styling */
+        .message-list {
+            margin-top: 20px;
+            padding-left: 0;
+            color: #d9534f;
+            list-style-type: none;
+        }
+
+        .message-list li {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        /* Flash messages by category */
+        .message.success {
+            color: #28a745;
+        }
+
+        .message.error {
+            color: #dc3545;
+        }
+
+        .message.warning {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <!-- Registration form container -->
+    <div class="container">
+        <h1>Register</h1>
+
+        <!-- Form posts data to /register endpoint -->
+        <form action="{{ url_for('register') }}" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required><br>
+        
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required><br>
+        
+            <button type="submit">Register</button>
+        </form>
+        
+        
+        
+
+        <!-- Link to login page -->
+        <div class="footer">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+
+        <!-- Display flash messages (e.g., success or error) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="message-list">
+                    {% for category, message in messages %}
+                        <li class="message {{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Simple JavaScript to check if passwords match before submission -->
+    <script>
+        const form = document.getElementById("registerForm");
+        form.addEventListener("submit", function(event) {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm_password").value;
+
+            // If passwords don't match, prevent submission and alert user
+            if (password !== confirmPassword) {
+                event.preventDefault();  // Stop the form from submitting
+                alert("Passwords do not match!");
+            }
+        });
+    </script>
+</body>
+</html>

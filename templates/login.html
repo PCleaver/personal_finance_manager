@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- Inline styles for layout and form design -->
+    <style>
+        body {
+            background-color: #333;  /* Dark grey background */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #f4f4f9; /* Light text color for contrast */
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Label for input fields */
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #000;  /* Black color for the labels */
+        }
+
+        /* Input fields */
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #f9f9f9;  /* Light background for input fields */
+        }
+
+        /* Focus effect for input fields */
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: rgb(38, 104, 217); /* Highlight on focus */
+            outline: none;
+        }
+
+        /* Login button */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: rgb(38, 104, 217);  /* blue button */
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background-color: rgb(69, 140, 160);  /* light blue button on hover */
+        }
+
+        /* Footer below the form with links */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styling flash messages by category */
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .flash-message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .flash-message.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .flash-message.warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        /* Add some spacing around the footer text */
+        .footer p {
+            color: black;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main container for login form -->
+    <div class="container">
+        <h1>Login</h1>
+
+        <!-- Flask flash messages for errors or success -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Login form POSTs to the login route -->
+        <form action="{{ url_for('login') }}" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required aria-label="Username"><br>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required aria-label="Password"><br>
+
+            <button type="submit">Login</button>
+        </form>
+        
+        <!-- Links to registration and password reset -->
+        <div class="footer">
+            <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        </div>
+    </div>
+
+</body>
+</html>

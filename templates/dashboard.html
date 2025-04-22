@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;  /* Light background for light mode */
+            padding: 20px;
+            color: #333; /* Default text color */
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark mode */
+        }
+
+        h1 {
+            color: #333; /* Default title color */
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff; /* White background for light mode */
+            padding: 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Flash message styling */
+        .flash-message {
+            color: green;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #e7f7e6;
+            border: 1px solid #c1e8c1;
+            border-radius: 4px;
+        }
+
+        .flash-message.error {
+            color: red;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        /* Button Styling */
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1e1e1e; /* Dark background for body */
+            color: #e0e0e0; /* Light text color for dark mode */
+        }
+
+        .container.dark-mode {
+            background-color: #2c2c2c; /* Dark background for the container */
+            color: #e0e0e0; /* Light text color for dark mode */
+        }
+
+        h1.dark-mode {
+            color: white; /* White title color for dark mode */
+        }
+
+        button.dark-mode {
+            background-color: #007bff; /* Blue button color in dark mode */
+        }
+
+        /* Chart styling */
+        canvas {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Position the theme toggle button below the pie chart, on the right */
+        .theme-toggle {
+            position: relative;
+            top: 20px;
+            right: 0;
+            float: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Dashboard</h1>
+        
+        <!-- Display Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                    {% for category, message in messages %}
+                        <li class="flash-message {{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Bar Chart -->
+        <canvas id="barChart" width="400" height="400"></canvas>
+
+        <script>
+            // Get the context of the canvas where the bar chart will be rendered
+            var ctx = document.getElementById('barChart').getContext('2d');
+            
+            // Create the bar chart using Chart.js
+            var barChart = new Chart(ctx, {
+                type: 'bar', // Set the chart type to "bar"
+                data: {
+                    labels: {{ categories | tojson | safe }},  // Categories passed from Flask to JavaScript
+                    datasets: [{
+                        label: 'Expenses by Category',
+                        data: {{ amounts | tojson | safe }},  // Amounts passed from Flask to JavaScript
+                        backgroundColor: '#007bff', // Single color for all bars
+                        borderColor: '#0056b3',     // Border color for the bars
+                        borderWidth: 1 // Border width for the bars
+                    }]
+                },
+                options: {
+                    responsive: true, // Make the chart responsive
+                    plugins: {
+                        legend: {
+                            position: 'top', // Position the legend at the top of the chart
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    // Format tooltip to show amounts with currency symbol
+                                    return tooltipItem.label + ': £' + tooltipItem.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Ensure the y-axis starts at 0
+                            ticks: {
+                                callback: function(value) {
+                                    return '£' + value.toFixed(2); // Add currency symbol to y-axis ticks
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Function to toggle dark and light mode
+            function toggleTheme() {
+                // Toggle the 'dark-mode' class on body and other elements
+                document.body.classList.toggle('dark-mode');
+                document.querySelector('.container').classList.toggle('dark-mode');
+                document.querySelector('h1').classList.toggle('dark-mode');
+                document.querySelectorAll('button').forEach(function(btn) {
+                    btn.classList.toggle('dark-mode');
+                });
+
+                // Toggle button text between "Light Mode" and "Dark Mode"
+                const button = document.querySelector('.theme-toggle');
+                if (document.body.classList.contains('dark-mode')) {
+                    button.textContent = 'Light Mode'; // Set button text to 'Light Mode' if dark mode is enabled
+                } else {
+                    button.textContent = 'Dark Mode'; // Set button text to 'Dark Mode' if light mode is enabled
+                }
+
+                // Save the theme preference in localStorage to persist across page reloads
+                const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+            }
+
+            // Load the saved theme preference from localStorage when the page loads
+            window.onload = function() {
+                const savedTheme = localStorage.getItem('theme'); // Get the saved theme from localStorage
+                if (savedTheme === 'dark') {
+                    // Apply dark mode if previously saved
+                    document.body.classList.add('dark-mode');
+                    document.querySelector('.container').classList.add('dark-mode');
+                    document.querySelector('h1').classList.add('dark-mode');
+                    document.querySelectorAll('button').forEach(function(btn) {
+                        btn.classList.add('dark-mode');
+                    });
+
+                    // Change button text to "Light Mode" if dark mode is applied
+                    document.querySelector('.theme-toggle').textContent = 'Light Mode';
+                }
+            }
+        </script>
+    </div>
+
+    <!-- Back Button -->
+    <button onclick="history.back()">← Back</button>
+
+    <!-- Dark Mode Toggle Button positioned below the chart on the right -->
+    <button class="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+/* General body styling */
+body {
+    background-color: #f0f0f0;  /* Light gray background for default (light mode) */
+    font-family: Arial, sans-serif; /* Use Arial as the default font */
+    color: #333; /* Dark text color for good contrast */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark/light mode */
+}
+
+/* Customize the error message background */
+.flash.danger {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24; /* Darker red for text */
+    border: 1px solid #f5c6cb; /* Border color to match the light red background */
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Styling for the main heading */
+h1 {
+    text-align: center; /* Center-align the heading */
+    color: #2a9d8f;  /* A teal color for the heading */
+    padding-top: 50px; /* Add top padding for spacing */
+}
+
+/* Styling for paragraphs */
+p {
+    text-align: center; /* Center-align the paragraph */
+    color: #555; /* Slightly lighter gray text for paragraphs */
+    font-size: 1.2em; /* Slightly larger font size for readability */
+}
+
+/* Styling for the navigation bar */
+nav {
+    background-color: #264653;  /* Dark blue background for the navigation bar */
+    padding: 10px; /* Padding around the navigation links */
+    text-align: center; /* Center-align the navigation items */
+}
+
+/* Styling for the unordered list in the navigation */
+nav ul {
+    list-style-type: none; /* Remove the bullet points from the list */
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+}
+
+/* Styling for each list item in the navigation */
+nav ul li {
+    display: inline; /* Display the list items inline (horizontally) */
+    margin-right: 20px; /* Add space between the list items */
+}
+
+/* Styling for links in the navigation */
+nav ul li a {
+    text-decoration: none; /* Remove the underline from links */
+    color: white; /* Set the text color to white */
+    font-weight: bold; /* Make the link text bold */
+    transition: color 0.3s ease; /* Smooth color transition on hover */
+}
+
+/* Hover effect for links in the navigation */
+nav ul li a:hover {
+    color: #e9c46a;  /* Light yellow color when the link is hovered over */
+}
+
+/* Button for adding an expense */
+.btn-add-expense {
+    padding: 10px 20px; /* Add padding to the button */
+    background-color: #007bff; /* Blue background color for the button */
+    color: white; /* White text color */
+    text-decoration: none; /* Remove text decoration (underline) */
+    border-radius: 5px; /* Round the corners of the button */
+    margin-bottom: 20px; /* Add space below the button */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+/* Hover effect for the "Add Expense" button */
+.btn-add-expense:hover {
+    background-color: #0056b3; /* Darker blue background when hovered */
+}
+
+/* Dark mode settings */
+body.dark-mode {
+    background-color: #121212; /* Dark background for dark mode */
+    color: #ffffff; /* White text for dark mode */
+}
+
+/* Styling for the dark mode toggle button */
+.button-toggle {
+    position: fixed; /* Fix the button at the top-right of the screen */
+    top: 10px; /* Position 10px from the top */
+    right: 10px; /* Position 10px from the right */
+    padding: 8px 12px; /* Add padding inside the button */
+    background: #444; /* Dark gray background for the button */
+    color: white; /* White text color for the button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.button-toggle:hover {
+    background-color: #666; /* Lighter gray when hovered */
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    .theme-toggle {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .back-btn, .theme-toggle {
+        font-size: 12px;
+    }
+}

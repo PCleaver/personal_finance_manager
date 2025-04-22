@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta information for character set and page title -->
+    <meta charset="UTF-8">
+    <title>Your App</title>
+
+    <!-- Linking external CSS file from the static folder -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        /* Default light mode styles for the body */
+        body {
+            background-color: #ffffff; /* White background for light mode */
+            color: #000000; /* Black text for light mode */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
+        }
+
+        /* Dark mode styles for the body */
+        body.dark-mode {
+            background-color: #121212; /* Dark background for dark mode */
+            color: #ffffff; /* White text for dark mode */
+        }
+
+        /* Button to toggle between light and dark mode */
+        .button-toggle {
+            position: fixed; /* Fixed position on the screen */
+            top: 10px; /* Position the button 10px from the top */
+            right: 10px; /* Position the button 10px from the right */
+            padding: 10px 15px; /* Increased padding for better click area */
+            background: #444; /* Dark background color for the button */
+            color: white; /* White text for the button */
+            border: none; /* Remove button border */
+            border-radius: 5px; /* Rounded corners for the button */
+            cursor: pointer; /* Show pointer cursor on hover */
+            z-index: 1000; /* Ensure the button is above other elements */
+            transition: background-color 0.3s ease; /* Smooth background transition */
+        }
+
+        /* Focus effect for the toggle button */
+        .button-toggle:focus {
+            outline: none; /* Remove default outline */
+            border: 2px solid #ffffff; /* Add a white border on focus */
+        }
+
+        /* Styles for flash messages */
+        .flashes {
+            list-style: none; /* Remove list bullets */
+            padding: 0; /* Remove padding */
+            margin-top: 60px; /* Add margin from the top */
+        }
+
+        /* Styles for each individual flash message */
+        .flashes li {
+            margin-bottom: 10px; /* Add space between messages */
+            padding: 10px; /* Add padding inside each flash message */
+            border-radius: 5px; /* Rounded corners for flash messages */
+            font-size: 16px; /* Text size for messages */
+        }
+
+        /* Success message styling */
+        .flashes .alert-success {
+            background-color: #d4edda; /* Light green background */
+            color: #155724; /* Dark green text color */
+        }
+
+        /* Error message styling */
+        .flashes .alert-danger {
+            background-color: #f8d7da; /* Light red background */
+            color: #721c24; /* Dark red text color */
+        }
+    </style>
+</head>
+<body>
+    <!-- Button to toggle between light and dark mode -->
+    <button class="button-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+
+    <!-- Displaying flash messages if any exist -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <!-- Loop through each flash message and display it -->
+                    <li class="alert alert-{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main content of the page is dynamically injected here -->
+    {% block content %}{% endblock %}
+
+    <script>
+        // Function to toggle the theme (light or dark mode)
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode'); // Toggle the 'dark-mode' class on the body
+            const isDark = document.body.classList.contains('dark-mode'); // Check if dark mode is active
+            // Save the current theme preference (light or dark) in localStorage
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // On page load, check the saved theme preference from localStorage
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme'); // Get saved theme from localStorage
+            if (savedTheme === 'dark') {
+                // If dark theme was previously saved, apply dark mode
+                document.body.classList.add('dark-mode');
+            }
+        };
+    </script>
+</body>
+</html>

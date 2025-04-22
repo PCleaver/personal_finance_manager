@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spending Chart</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Center the chart and add spacing */
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Make the chart responsive */
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spending by Category</h1>
+        <canvas id="pieChart" width="400" height="400"></canvas>
+    </div>
+
+    <script>
+        // Data passed from the Flask route
+        const categories = {{ categories|tojson }};
+        const amounts = {{ amounts|tojson }};
+        
+        // Create pie chart using Chart.js
+        const ctx = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: categories,  // Categories (e.g., 'Food', 'Transport', etc.)
+                datasets: [{
+                    label: 'Spending by Category',
+                    data: amounts,  // Total spending in each category
+                    backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A8', '#33FFDA', '#FFD733'], // Colors for each slice
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top', // Position the legend at the top of the chart
+                        labels: {
+                            font: {
+                                size: 14,  // Make legend text a bit bigger
+                            },
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': $' + tooltipItem.raw.toFixed(2); // Show amount with 2 decimal places
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

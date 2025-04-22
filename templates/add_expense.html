@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta information for character set and viewport settings for responsive design -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Expense</title>
+    
+    <style>
+        /* Basic styling for the body */
+        body {
+            font-family: Arial, sans-serif; /* Font family for text */
+            background-color: rgb(66, 66, 83); /* Dark gray background for the body */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        /* Container to hold the form */
+        .container {
+            width: 100%;
+            max-width: 500px; /* Limit the width of the container */
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 20px; /* Add padding inside the container */
+            background-color: #fff; /* White background for the container */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow around the container */
+        }
+
+        /* Title styling */
+        h1 {
+            text-align: center; /* Center-align the heading */
+            color: #333; /* Dark text color for the title */
+        }
+
+        /* Styling for each form group */
+        .form-group {
+            margin-bottom: 20px; /* Space between form fields */
+        }
+
+        /* Label styling */
+        label {
+            display: block; /* Ensure labels are block-level elements */
+            font-size: 14px; /* Font size for labels */
+            color: #333; /* Dark text color for labels */
+        }
+
+        /* Styling for input fields, select dropdown, and buttons */
+        input[type="text"], input[type="number"], select, input[type="date"], button {
+            width: 100%; /* Ensure the elements take full width of the container */
+            padding: 10px; /* Padding inside the elements */
+            font-size: 16px; /* Font size for text inputs */
+            margin-top: 5px; /* Space above the elements */
+            border-radius: 4px; /* Rounded corners */
+            border: 1px solid #ccc; /* Light border color for the elements */
+        }
+
+        /* Button styling */
+        button {
+            background-color: #007bff; /* Blue background for the button */
+            color: white; /* White text color for the button */
+            border: none; /* Remove the border */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth transition on hover */
+        }
+
+        /* Hover effect for the button */
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Focus effect for inputs and buttons */
+        input:focus, select:focus, button:focus {
+            border-color: #0056b3; /* Blue border on focus */
+            outline: none; /* Remove default outline */
+        }
+
+        /* Flash message container styling */
+        .flash-message {
+            margin: 15px 0; /* Add vertical spacing for flash messages */
+            padding: 10px; /* Padding inside the flash message box */
+            border-radius: 4px; /* Rounded corners */
+            text-align: center; /* Center-align the message text */
+        }
+
+        /* Success message styling */
+        .flash-success {
+            background-color: #d4edda; /* Light green background */
+            color: #155724; /* Dark green text color */
+        }
+
+        /* Error message styling */
+        .flash-danger {
+            background-color: #f8d7da; /* Light red background */
+            color: #721c24; /* Dark red text color */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main container for the Add Expense form -->
+    <div class="container">
+        <h1>Add New Expense</h1>
+        
+        <!-- Display any flash messages (e.g., success or error messages) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-message">
+                    {% for category, message in messages %}
+                        <!-- Loop through and display each message with a category-specific style -->
+                        <div class="flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Expense form starts here -->
+        <form action="{{ url_for('add_expense') }}" method="POST">
+            <!-- Expense Name input field -->
+            <div class="form-group">
+                <label for="name">Expense Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter expense name" required>
+            </div>
+
+            <!-- Category dropdown menu -->
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <!-- Pre-set categories for expense types -->
+                    <option value="Housing">Housing</option>
+                    <option value="Food & Dining">Food & Dining</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Health & Fitness">Health & Fitness</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Shopping">Shopping</option>
+                    <!-- Additional categories can be added here -->
+                </select>
+            </div>
+
+            <!-- Amount input field -->
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+            </div>
+
+            <!-- Date input field -->
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" value="{{ current_date }}" required>
+            </div>
+
+            <!-- Submit button for the form -->
+            <div class="form-group">
+                <button type="submit">Add Expense</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
